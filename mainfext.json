@@ -15,7 +15,7 @@
     "service_worker": "background.js"
   },
   "action": {
-    "default_title": "Open PiP+"
+    "default_title": "Open PiP By No BS"
   },
   "commands": {
     "open-pip-plus": {
@@ -23,7 +23,7 @@
         "default": "Ctrl+Shift+Y",
         "mac": "Command+Shift+Y"
       },
-      "description": "Open PiP+ floating player for the first video on the page"
+      "description": "Open PiP By No BS"
     }
   },
   "icons": {
