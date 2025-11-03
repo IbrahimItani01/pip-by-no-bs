@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PiP Video Controls</title>
+  <!-- Feather Icons CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js"></script>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      width: 320px;
+      padding: 20px;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', sans-serif;
+      background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+      color: #e0e0e0;
+      border-radius: 12px;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+    }
+
+    .header {
+      margin-bottom: 20px;
+    }
+
+    h2 {
+      font-size: 18px;
+      font-weight: 600;
+      color: #ffffff;
+      letter-spacing: 0.5px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .header svg {
+      width: 20px;
+      height: 20px;
+      stroke: #00d4ff;
+      stroke-width: 2.5;
+    }
+
+    .controls-section {
+      margin-bottom: 16px;
+    }
+
+    .section-label {
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 1.2px;
+      color: #808080;
+      margin-bottom: 10px;
+      font-weight: 700;
+    }
+
+    .controls {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+
+    button {
+      flex: 1;
+      padding: 12px 12px;
+      border: none;
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.08);
+      color: #ffffff;
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      position: relative;
+      overflow: hidden;
+    }
+
+    button:hover {
+      background: rgba(0, 212, 255, 0.12);
+      border-color: rgba(0, 212, 255, 0.3);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(0, 212, 255, 0.15);
+    }
+
+    button:active {
+      transform: translateY(0);
+      box-shadow: 0 4px 12px rgba(0, 212, 255, 0.1);
+    }
+
+    button svg {
+      width: 16px;
+      height: 16px;
+      stroke: currentColor;
+      stroke-width: 2;
+    }
+
+    .pip-btn {
+      width: 100%;
+      background: linear-gradient(135deg, #00d4ff 0%, #0099cc 100%);
+      color: #1a1a2e;
+      font-weight: 600;
+      border: none;
+      box-shadow: 0 8px 24px rgba(0, 212, 255, 0.25);
+      margin-bottom: 4px;
+    }
+
+    .pip-btn:hover {
+      background: linear-gradient(135deg, #00e5ff 0%, #00aadd 100%);
+      box-shadow: 0 12px 32px rgba(0, 212, 255, 0.35);
+      transform: translateY(-3px);
+    }
+
+    .pip-btn:active {
+      transform: translateY(-1px);
+      box-shadow: 0 6px 16px rgba(0, 212, 255, 0.2);
+    }
+
+    .pip-btn svg {
+      stroke: #1a1a2e;
+      stroke-width: 2.5;
+    }
+
+    .status {
+      margin-top: 14px;
+      padding: 12px 14px;
+      border-radius: 8px;
+      font-size: 13px;
+      text-align: center;
+      display: none;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      animation: slideIn 0.3s ease-out;
+    }
+
+    .status.show {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      background: rgba(0, 212, 255, 0.1);
+      color: #00d4ff;
+      border-color: rgba(0, 212, 255, 0.3);
+    }
+
+    .status svg {
+      width: 14px;
+      height: 14px;
+      stroke: #00d4ff;
+      stroke-width: 2.5;
+      flex-shrink: 0;
+    }
+
+    .status.error {
+      background: rgba(255, 76, 76, 0.1);
+      color: #ff4c4c;
+      border-color: rgba(255, 76, 76, 0.3);
+    }
+
+    .status.error svg {
+      stroke: #ff4c4c;
+    }
+
+    @keyframes slideIn {
+      from {
+        opacity: 0;
+        transform: translateY(-8px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* Scrollbar styling for modern look */
+    ::-webkit-scrollbar {
+      width: 6px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: rgba(255, 255, 255, 0.04);
+      border-radius: 3px;
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: rgba(0, 212, 255, 0.3);
+      border-radius: 3px;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+      background: rgba(0, 212, 255, 0.5);
+    }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <h2>
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <rect x="5" y="2" width="14" height="20" rx="2" ry="2"></rect>
+        <line x1="12" y1="18" x2="12" y2="18"></line>
+      </svg>
+      PiP Controls
+    </h2>
+  </div>
+
+  <div class="controls-section">
+    <button class="pip-btn" id="pipBtn">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M8 3H5a2 2 0 0 0-2 2v3m18-5h3a2 2 0 0 1 2 2v3M3 19v3a2 2 0 0 0 2 2h3m15 0h3a2 2 0 0 0 2-2v-3"></path>
+      </svg>
+      Enter Picture-in-Picture
+    </button>
+  </div>
+
+  <div class="controls-section">
+    <div class="section-label">Playback</div>
+    <div class="controls">
+      <button id="rewindBtn">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <polyline points="7 8 3 12 7 16"></polyline>
+          <path d="M10 12H3"></path>
+          <circle cx="12" cy="12" r="9"></circle>
+          <path d="M18 9v6"></path>
+        </svg>
+        Rewind 10s
+      </button>
+      <button id="forwardBtn">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <polyline points="17 8 21 12 17 16"></polyline>
+          <path d="M14 12h7"></path>
+          <circle cx="12" cy="12" r="9"></circle>
+          <path d="M6 9v6"></path>
+        </svg>
+        Forward 10s
+      </button>
+    </div>
+  </div>
+
+  <div id="status" class="status"></div>
+  <script src="popup.js"></script>
+  <!-- <script>
+    // Initialize Feather icons
+    feather.replace();
+
+    // Get elements
+    const pipBtn = document.getElementById('pipBtn');
+    const rewindBtn = document.getElementById('rewindBtn');
+    const forwardBtn = document.getElementById('forwardBtn');
+    const statusDiv = document.getElementById('status');
+
+    // Helper function to show status
+    function showStatus(message, isError = false) {
+      const icon = isError ? '❌' : '✓';
+      statusDiv.innerHTML = `${icon} ${message}`;
+      statusDiv.classList.add('show');
+      if (isError) statusDiv.classList.add('error');
+      else statusDiv.classList.remove('error');
+
+      setTimeout(() => {
+        statusDiv.classList.remove('show');
+      }, 3000);
+    }
+
+    // PiP button click handler
+    pipBtn.addEventListener('click', async () => {
+      try {
+        const video = await navigator.mediaSession?.metadata;
+        showStatus('Picture-in-Picture activated');
+      } catch (error) {
+        showStatus('PiP not available', true);
+      }
+    });
+
+    // Rewind button click handler
+    rewindBtn.addEventListener('click', () => {
+      showStatus('Rewound 10 seconds');
+    });
+
+    // Forward button click handler
+    forwardBtn.addEventListener('click', () => {
+      showStatus('Forwarded 10 seconds');
+    });
+  </script> -->
+</body>
+</html>
