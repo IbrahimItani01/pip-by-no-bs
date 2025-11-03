@@ -2,7 +2,7 @@
   "manifest_version": 3,
   "name": "PiP By No BS",
   "version": "1.0",
-  "description": "Your typical PiP but on steroids no BS",
+  "description": "Your typical PiP but on steroids... no BS",
   "permissions": [
     "scripting",
     "activeTab",
